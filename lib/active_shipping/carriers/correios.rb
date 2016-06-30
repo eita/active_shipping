@@ -80,7 +80,7 @@ module ActiveShipping
           declared_value_extra: parse_currency(options[:declared_value_extra]),
           delivery_notice_extra: parse_boolean(options[:delivery_notice_extra]),
           return_type: RETURN_TYPE,
-          return_information: RETURN_INFORMATION_TYPE[:prices]
+          return_information: RETURN_INFORMATION_TYPE[:prices_and_time]
         }
         @urls = packages.map { |package| create_url(package).to_s }
       end
@@ -197,7 +197,8 @@ module ActiveShipping
       def rates_array
         services = normalized_services.map do |service_id, elements|
           total_price = elements.sum { |element| price(element) }
-          { :service_code => service_id, :total_price => total_price, :currency => "BRL" }
+          range = (Date.tomorrow..(Date.tomorrow+elements.sum { |element| delivery_range(element).days}))
+          { :service_code => service_id, :total_price => total_price, :delivery_range => range, :currency => "BRL", :shipping_date => Date.tomorrow }
         end
       end
 
@@ -228,6 +229,10 @@ module ActiveShipping
 
       def price(xml_item)
         xml_item.css('Valor').text.gsub(',', '.').to_f
+      end
+
+      def delivery_range(xml_item)
+        xml_item.css('PrazoEntrega').text.to_i
       end
 
     end
