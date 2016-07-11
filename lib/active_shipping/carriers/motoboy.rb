@@ -10,7 +10,7 @@ module ActiveShipping
       options = @options.merge(options)
       if (destination.postal_code.to_i >= 59000001 && destination.postal_code.to_i <= 59161999) || (destination.postal_code.to_i >= 59290000 && destination.postal_code.to_i <= 59290999)
         success = true
-        rates = [RateEstimate.new(origin, destination, Motoboy.name, "Motoboy", {total_price: 500, currency: "BRL"})]
+        rates = [RateEstimate.new(origin, destination, Motoboy.name, "Normal", {total_price: 500, currency: "BRL"})]
       else
         success = false
         rates = {}
@@ -18,5 +18,17 @@ module ActiveShipping
       end
       response = RateResponse.new(success, message, {}, {rates: rates})
     end
+
+    def self.available_services
+      AVAILABLE_SERVICES
+    end
+
+    protected
+    DEFAULT_SERVICES = [1, 2]
+    AVAILABLE_SERVICES = {
+      1 => 'Normal',
+      2 => 'Expresso',
+    }.freeze
+
   end
 end
