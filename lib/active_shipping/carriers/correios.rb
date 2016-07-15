@@ -197,7 +197,8 @@ module ActiveShipping
       def rates_array
         services = normalized_services.map do |service_id, elements|
           total_price = elements.sum { |element| price(element) }
-          range = (Date.tomorrow..(Date.tomorrow+elements.sum { |element| delivery_range(element).days}))
+          puts elements
+          range = (Date.tomorrow..(Date.tomorrow+delivery_range(elements.last).days))
           { :service_code => service_id, :total_price => total_price, :delivery_range => range, :currency => "BRL", :shipping_date => Date.tomorrow }
         end
       end
