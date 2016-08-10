@@ -20,7 +20,7 @@ module ActiveShipping
           end
         end
       else
-        success = false
+        success = true
         rates = {}
         message = "Não entregamos neste endereço"
       end
