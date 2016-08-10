@@ -11,9 +11,14 @@ module ActiveShipping
       if (destination.postal_code.to_i >= 59000001 && destination.postal_code.to_i <= 59161999) || (destination.postal_code.to_i >= 59290000 && destination.postal_code.to_i <= 59290999)
         success = true
         item = {total_price: 0, currency: "BRL", delivery_range: [Date.tomorrow], shipping_date: Date.tomorrow, service_code: 1}
-        estimate = RateEstimate.new(origin, destination, Motoboy.name, "Normal", item)
-        estimate.service_code = 1
-        rates = [estimate]
+        rates = []
+        AVAILABLE_SERVICES.to_s.each do |s|
+          if options[:services].nil? OR options[:services].includes(s[0])
+            estimate = RateEstimate.new(origin, destination, Motoboy.name, s[1], item)
+            estimate.service_code = s[0]
+            rates << estimate
+          end
+        end
       else
         success = false
         rates = {}
