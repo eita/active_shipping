@@ -12,7 +12,7 @@ module ActiveShipping
         success = true
         item = {total_price: 0, currency: "BRL", delivery_range: [Date.tomorrow], shipping_date: Date.tomorrow, service_code: 1}
         rates = []
-        AVAILABLE_SERVICES.to_s.each do |s|
+        AVAILABLE_SERVICES.to_a.each do |s|
           if options[:services].nil? OR options[:services].includes(s[0])
             estimate = RateEstimate.new(origin, destination, Motoboy.name, s[1], item)
             estimate.service_code = s[0]
