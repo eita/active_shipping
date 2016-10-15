@@ -1,3 +1,3 @@
 module ActiveShipping
-  VERSION = "1.7.15"
+  VERSION = "1.7.2"
 end
